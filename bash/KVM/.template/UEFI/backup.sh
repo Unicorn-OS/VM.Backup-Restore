@@ -1,4 +1,4 @@
-name=win11
+source var
 
 mkdir -p xml nvram
 

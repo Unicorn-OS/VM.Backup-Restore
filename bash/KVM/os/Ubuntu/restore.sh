@@ -1,0 +1,1 @@
+../../.template/UEFI/restore.sh

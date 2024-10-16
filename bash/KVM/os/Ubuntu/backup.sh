@@ -1,4 +1,4 @@
-name=ubuntu24.10
+source var
 
 mkdir -p xml nvram
 

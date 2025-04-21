@@ -1,10 +1,11 @@
 source my.var.sh
 source setting.sh
 
-bacDir=${bac_dir}/${vmName}/${snapshotLabel}
+bacDir=${backup_dir}/${vmName}/${snapshotLabel}
+snapImg=${vmName}{$snapshotLabel}.compressed.qcow2
 
 pre(){
-  mkdir -p $bacDir/xml $backDir/nvram
+  mkdir -p $bacDir/xml $bacDir/nvram
 }
 
 inDir(){
@@ -12,26 +13,36 @@ inDir(){
 }
 
 compressDiskImage(){
-  inDir()
-  if [ ! -f ${vmName}.compressed.qcow2 ]; then
-    sudo qemu-img convert -p -O qcow2 -c /var/lib/libvirt/images/${vmName}.qcow2 ${vmName}.compressed.qcow2
+  if [ ! -f ${bacDir}/${snapImg} ]; then
+    sudo qemu-img convert -p -O qcow2 -c /var/lib/libvirt/images/${vmName}.qcow2 ${bacDir}/${snapImg}
+    echo "Backed up disk image"
   fi
 }
 
+bacNvram(){
 # if (type == "VFIO"){
-sudo rsync -av --progress --append-verify /var/lib/libvirt/qemu/nvram/${vmName}_VARS.fd nvram/  
+  sudo rsync -av --progress --append-verify /var/lib/libvirt/qemu/nvram/${vmName}_VARS.fd ${bacDir}/nvram/
 #}
+}
 
 bacXml(){
-  inDir()
-  virsh dumpxml ${vmName} > xml/original.xml
+  # Some distros require sudo, others don't: Make this Dynamic!
+  sudo virsh dumpxml ${vmName} > ${bacDir}/xml/original.xml
+}
+
+ownership(){
+  sudo chown -R $USER:$USER ${bacDir}
 }
 
 checksum(){
-  sudo cfv -Crr
+  inDir
+  cfv -Crrt md5
 }
 
-pre()
-compressDiskImage()
-checksum()
+pre
+compressDiskImage
+bacNvram
+bacXml
+ownership
+checksum
 cd -

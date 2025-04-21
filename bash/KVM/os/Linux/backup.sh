@@ -1,28 +1,37 @@
-source my.var
+source my.var.sh
 source setting.sh
 
-mkdir -p $bac_dir
+bacDir=${bac_dir}/${vmName}/${snapshotLabel}
 
-cd $bac_dir/${name}
+pre(){
+  mkdir -p $bacDir/xml $backDir/nvram
+}
 
-mkdir -p xml nvram
+inDir(){
+  cd $bacDir
+}
 
-compress_disk_image(){
-  
-#DEL:  sudo mv /var/lib/libvirt/images/${name}.qcow2 . 
-
-  if [ ! -f ${name}.compressed.qcow2 ]; then
-    sudo qemu-img convert -p -O qcow2 -c /var/lib/libvirt/images/${name}.qcow2 ${name}.compressed.qcow2
+compressDiskImage(){
+  inDir()
+  if [ ! -f ${vmName}.compressed.qcow2 ]; then
+    sudo qemu-img convert -p -O qcow2 -c /var/lib/libvirt/images/${vmName}.qcow2 ${vmName}.compressed.qcow2
   fi
-
-  # Restore
-#DEL:  sudo mv ${name}.qcow2 /var/lib/libvirt/images/
 }
 
 # if (type == "VFIO"){
-sudo rsync -av --progress --append-verify /var/lib/libvirt/qemu/nvram/${name}_VARS.fd nvram/  
+sudo rsync -av --progress --append-verify /var/lib/libvirt/qemu/nvram/${vmName}_VARS.fd nvram/  
 #}
 
-virsh dumpxml ${name} > xml/original.xml
+bacXml(){
+  inDir()
+  virsh dumpxml ${vmName} > xml/original.xml
+}
 
-sudo cfv -Crr
+checksum(){
+  sudo cfv -Crr
+}
+
+pre()
+compressDiskImage()
+checksum()
+cd -

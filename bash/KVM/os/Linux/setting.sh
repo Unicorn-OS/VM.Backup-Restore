@@ -1,1 +1,1 @@
-backup_dir=~/.uni/hyper/bac
+backup_dir=~/.uni/bac/hyper

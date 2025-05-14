@@ -1,4 +1,4 @@
 snapshotLabel="0.clean"
 
-vmName=Ubuntu25.04.bac
+vmName=BlissOS-16.bac
 #vmName=manjaro

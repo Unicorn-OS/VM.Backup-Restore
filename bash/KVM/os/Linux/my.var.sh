@@ -1,4 +1,4 @@
 snapshotLabel="0.clean"
 
-#vmName=ubuntu24.10
-vmName=manjaro
+vmName=Ubuntu25.04.bac
+#vmName=manjaro

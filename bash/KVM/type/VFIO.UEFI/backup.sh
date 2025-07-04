@@ -1,3 +1,4 @@
+#!/usr/bin/bash
 source my.var.sh
 source setting.sh
 

@@ -9,3 +9,4 @@ vmName=Win11
 vmName=WiFi.m
 vmName=bac.Win10
 vmName=bac.Manjaro.Gaming
+vmName=bac.Ubuntu-Rust
